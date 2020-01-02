@@ -1,4 +1,4 @@
-package com.artarkatesoft.videoplayerapp;
+package com.artarkatesoft.clipmakerapp.clipmaker;
 
 public class VideoClip {
     private String fullFileName;

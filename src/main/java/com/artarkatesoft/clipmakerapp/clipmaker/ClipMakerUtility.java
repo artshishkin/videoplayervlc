@@ -1,4 +1,4 @@
-package com.artarkatesoft.videoplayerapp;
+package com.artarkatesoft.clipmakerapp.clipmaker;
 
 import org.apache.commons.io.FilenameUtils;
 

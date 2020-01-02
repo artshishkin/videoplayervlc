@@ -1,7 +1,10 @@
-package com.artarkatesoft.videoplayerapp;
+package com.artarkatesoft.clipmakerapp.bestframechooser;
 
+import com.artarkatesoft.clipmakerapp.clipmaker.ClipMaker;
+import com.artarkatesoft.clipmakerapp.clipmaker.ClipMakerUtility;
 import com.sun.jna.Native;
 import com.sun.jna.NativeLibrary;
+import org.springframework.stereotype.Component;
 import uk.co.caprica.vlcj.binding.LibVlc;
 import uk.co.caprica.vlcj.binding.LibVlcConst;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
@@ -21,9 +24,11 @@ import java.nio.file.StandardOpenOption;
 import java.util.Collections;
 import java.util.List;
 
-public class VLCPlayer {
 
-    private static JFileChooser fileChooser = new JFileChooser();
+@Component
+public class FrameChooser {
+
+    private  JFileChooser fileChooser = new JFileChooser();
 
     private MediaPlayerFactory mediaPlayerFactory = new MediaPlayerFactory();
     private EmbeddedMediaPlayer mediaPlayer = mediaPlayerFactory.newEmbeddedMediaPlayer();
@@ -34,19 +39,31 @@ public class VLCPlayer {
 
 //This is the path for libvlc.dll
 
-    public static void main(String[] args) {
+//    public static void main(String[] args) {
+//        NativeLibrary.addSearchPath(RuntimeUtil.getLibVlcLibraryName(), "C:\\Program Files\\VideoLAN\\VLC");
+//        Native.loadLibrary(RuntimeUtil.getLibVlcLibraryName(), LibVlc.class);
+//        SwingUtilities.invokeLater(() -> {
+//            FrameChooser frameChooser = new FrameChooser();
+//        });
+//
+//    }
+
+    private FrameChooser() {
         NativeLibrary.addSearchPath(RuntimeUtil.getLibVlcLibraryName(), "C:\\Program Files\\VideoLAN\\VLC");
         Native.loadLibrary(RuntimeUtil.getLibVlcLibraryName(), LibVlc.class);
+
+//MAXIMIZE TO SCREEN
+
+
         SwingUtilities.invokeLater(() -> {
-            VLCPlayer vlcPlayer = new VLCPlayer();
+            createUserInterface();
         });
+
 
     }
 
-    private VLCPlayer() {
-
-//MAXIMIZE TO SCREEN
-        Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+    private void createUserInterface() {
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
         JFrame frame = new JFrame();
 
@@ -86,8 +103,6 @@ public class VLCPlayer {
         frame.setSize(1050, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
-
-
     }
 
     private JButton createTimeTickButton() {

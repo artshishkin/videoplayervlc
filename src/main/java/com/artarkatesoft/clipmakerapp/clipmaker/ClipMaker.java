@@ -1,5 +1,7 @@
-package com.artarkatesoft.videoplayerapp;
+package com.artarkatesoft.clipmakerapp.clipmaker;
 
+import com.artarkatesoft.clipmakerapp.bestframechooser.AllBestFrames;
+import com.artarkatesoft.clipmakerapp.bestframechooser.BestFrame;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xuggle.xuggler.IContainer;
 

@@ -1,4 +1,4 @@
-package com.artarkatesoft.videoplayerapp;
+package com.artarkatesoft.clipmakerapp.bestframechooser;
 
 import java.util.List;
 

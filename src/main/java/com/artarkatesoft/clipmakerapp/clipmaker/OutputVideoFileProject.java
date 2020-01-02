@@ -1,4 +1,4 @@
-package com.artarkatesoft.videoplayerapp;
+package com.artarkatesoft.clipmakerapp.clipmaker;
 
 import java.util.ArrayList;
 import java.util.List;
