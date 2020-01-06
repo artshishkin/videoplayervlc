@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication
 public class ClipMakerApplication implements CommandLineRunner {
@@ -13,7 +15,12 @@ public class ClipMakerApplication implements CommandLineRunner {
     private FrameChooser frameChooser;
 
     public static void main(String[] args) {
-        SpringApplication.run(ClipMakerApplication.class, args);
+//        SpringApplication.run(ClipMakerApplication.class, args);
+
+        //To use Swing application we need to set Headless mode to false
+        SpringApplicationBuilder builder = new SpringApplicationBuilder(ClipMakerApplication.class);
+        builder.headless(false);
+        ConfigurableApplicationContext context = builder.run(args);
     }
 
     @Override
@@ -21,3 +28,4 @@ public class ClipMakerApplication implements CommandLineRunner {
 
     }
 }
+

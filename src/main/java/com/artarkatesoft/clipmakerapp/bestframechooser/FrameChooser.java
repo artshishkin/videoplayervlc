@@ -4,6 +4,9 @@ import com.artarkatesoft.clipmakerapp.clipmaker.ClipMaker;
 import com.artarkatesoft.clipmakerapp.clipmaker.ClipMakerUtility;
 import com.sun.jna.Native;
 import com.sun.jna.NativeLibrary;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.co.caprica.vlcj.binding.LibVlc;
 import uk.co.caprica.vlcj.binding.LibVlcConst;
@@ -11,6 +14,7 @@ import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 import uk.co.caprica.vlcj.runtime.RuntimeUtil;
 
+import javax.annotation.PostConstruct;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
@@ -28,6 +32,8 @@ import java.util.List;
 @Component
 public class FrameChooser {
 
+    private Logger logger = LoggerFactory.getLogger(FrameChooser.class);
+
     private  JFileChooser fileChooser = new JFileChooser();
 
     private MediaPlayerFactory mediaPlayerFactory = new MediaPlayerFactory();
@@ -36,6 +42,8 @@ public class FrameChooser {
     private List<File> filesInCurrentDirectory;
     private File currentFile;
 
+    @Autowired
+    private ClipMaker clipMaker;
 
 //This is the path for libvlc.dll
 
@@ -48,22 +56,31 @@ public class FrameChooser {
 //
 //    }
 
-    private FrameChooser() {
+    public FrameChooser() {
         NativeLibrary.addSearchPath(RuntimeUtil.getLibVlcLibraryName(), "C:\\Program Files\\VideoLAN\\VLC");
         Native.loadLibrary(RuntimeUtil.getLibVlcLibraryName(), LibVlc.class);
 
 //MAXIMIZE TO SCREEN
+//createUserInterface();
 
-
-        SwingUtilities.invokeLater(() -> {
-            createUserInterface();
-        });
+//        SwingUtilities.invokeLater(() -> {
+//            createUserInterface();
+//        });
 
 
     }
 
+    @PostConstruct
+    public void init(){
+        createUserInterface();
+//        SwingUtilities.invokeLater(() -> {
+//            createUserInterface();
+//        });
+
+    }
+
     private void createUserInterface() {
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+//        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
         JFrame frame = new JFrame();
 
@@ -118,7 +135,7 @@ public class FrameChooser {
 
             String messageText = currentTime + " ms";
 //            currentTimeLabel.setText(messageText);
-            System.out.println(messageText);
+            logger.info("Current tick is "+messageText);
 
             try {
                 addTimeTick(currentTime);
@@ -147,7 +164,7 @@ public class FrameChooser {
 
             String defaultDir = "d:\\Users\\admin\\IdeaProjects\\VideoRedactorMaterials";
 
-            System.out.println("currentDirectory = " + currentDirectory);
+
 //            if (currentDirectory == null && Files.exists(Paths.get(defaultDir)))
             if (Files.exists(Paths.get(defaultDir)))
                 currentDirectory = new File(defaultDir);
@@ -181,7 +198,6 @@ public class FrameChooser {
 
         playButton.addActionListener(actionEvent -> {
             mediaPlayer.play();
-            System.out.println("mediaPlayer.getMediaDetails() = " + mediaPlayer.getMediaDetails());
         });
         return playButton;
     }
@@ -226,10 +242,11 @@ public class FrameChooser {
             if (openDialog == JFileChooser.APPROVE_OPTION) {
 
                 File audioFile = fileChooser.getSelectedFile();
-                ClipMaker clipMaker = new ClipMaker(audioFile.getAbsolutePath());
+
                 long start = System.currentTimeMillis();
-                clipMaker.make();
-                System.out.printf("Total time of clipMaker.make() is %d ms\n", System.currentTimeMillis() - start);
+                clipMaker.make(audioFile.getAbsolutePath());
+                logger.info("Total time of clipMaker.make() is {} ms", System.currentTimeMillis() - start);
+
 
             }
 
@@ -259,6 +276,7 @@ public class FrameChooser {
 
 
     private void addTimeTick(long timeTick) throws IOException {
+        if (timeTick<0) return;
         Path timeTickFilePath = getTimeTickFilePath();
         Files.write(timeTickFilePath, Collections.singletonList(timeTick + ""), StandardCharsets.UTF_8, StandardOpenOption.APPEND);
     }
